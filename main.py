@@ -1,6 +1,11 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
+from classes import *
+from constants import *
+
+
+
 def main():
 
     #Initialization a lvl(grid) with the method create from the Map class 
