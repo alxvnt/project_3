@@ -12,15 +12,14 @@ lvl.create()
 
 #Initialization of the character
 mcGyver = Character(lvl)
-#Initialization of the objects with the method create_objects from the Object class
+#Initialization of the objects 
 ether = Object(lvl)
 needle = Object(lvl)
 plastic_tube = Object(lvl)
 
 list_obj = [ether, needle, plastic_tube]
-
-#object counter
-nb_object = 0
+for i in list_obj:
+    i.obj_position()
   
 #Game loop
 while game_loop:
@@ -37,20 +36,23 @@ while game_loop:
         mcGyver.move('right')
 
     #test if you collect an object
-    
+    for a in list_obj:
+        mcGyver.take_obj(a)
 
 
 
     #Update the position
     mcGyver.display_position()
-    print("You got ", nb_object," objects")
+    print("You have ", mcGyver.nb_object," objects")
     
-    #Victory test
+    #End of the game test
     if (lvl.structure[mcGyver.y][mcGyver.x] == 'a'):
         game_loop = 0
 
-print("Victory")
-    
+if mcGyver.nb_object >= 3:
+    print("Victory")
+else:
+    print("Defeat: You miss some Object")
 
 
 

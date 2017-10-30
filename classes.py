@@ -47,7 +47,9 @@ class Character:
 
         #LVL where the character is
         self.lvl = lvl
-        
+
+        #Number of object taken
+        self.nb_object = 0
 
     def move(self, direction):
 
@@ -87,6 +89,11 @@ class Character:
     def display_position(self):
         print("x = ", self.x, "| y =", self.y)
     
+
+    def take_obj(self, obj):
+        if (self.x == obj.obj_x) and (self.y == obj.obj_y):
+            self.nb_object +=1
+            
 
 #class that generate objects
 class Object:
