@@ -4,11 +4,26 @@
 class Map:
 
     def __init__(self, file):
+        
         self.file = file
-        self.structure = structure
+        self.structure = 0
 
     def create(self):
-        pass
+
+        with open(self.file,'r') as file:
+            structure_file = []
+
+            for lign in file:
+                lign_lvl = []
+
+                for caracter in lign:
+                    if caracter != "\n":
+                        lign_lvl.append(caracter)
+
+                structure_file.append(lign_lvl)
+
+            self.structure = structure_file
+                
 
 #class that generate the character
 class Character:
