@@ -1,11 +1,13 @@
 from constants import *
+import random
+
 
 #class that generate the level
 class Map:
 
-    def __init__(self, file):
+    def __init__(self):
         
-        self.file = file
+        self.file = 'lvl_design.txt'
         self.structure = 0
 
     def create(self):
@@ -23,6 +25,15 @@ class Map:
                 structure_file.append(lign_lvl)
 
             self.structure = structure_file
+
+##    def place_objects(self):
+##
+##        for obj in obj_list:
+##            obj = Object()
+##            while self.structure[obj.obj_x][obj.obj_y] != 'o':
+##                obj.obj_x = random.randint(0, 14)
+##                obj.obj_y = random.randint(0, 14)
+##
                 
 
 #class that generate the character
@@ -36,7 +47,7 @@ class Character:
 
         #LVL where the character is
         self.lvl = lvl
-
+        
 
     def move(self, direction):
 
@@ -80,11 +91,23 @@ class Character:
 #class that generate objects
 class Object:
 
-    def __init__(self):
-        pass
+    def __init__(self, lvl):
 
-    def create_objects(self):
-        pass
+        self.obj_x = 0
+        self.obj_y = 0
+        self.lvl = lvl
+        while self.lvl.structure[self.obj_y][self.obj_x] != 'o':
+            self.obj_x = random.randint(0, 14)
+            self.obj_y = random.randint(0, 14)
 
-    def remaining_objects(self):
-        pass
+
+
+    def obj_position(self):
+        print("coordonnées de l'objet : x = ", self.obj_x, "| y =", self.obj_y)
+
+##    def place_obj(self):
+##        
+##        while self.lvl.structure[self.obj_y][self.obj_x] != 'o':
+##            self.obj_x = random.randint(0, 14)
+##            self.obj_y = random.randint(0, 14)
+        
