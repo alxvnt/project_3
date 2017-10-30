@@ -4,28 +4,46 @@
 from classes import *
 from constants import *
 
-
-
-def main():
-
-    #Initialization a lvl(grid) with the method create from the Map class 
-
-    #Initialization of the character with the constructor of the Character class
-
-    #Initialization of the objects with the method create_objects from the Object class
-    
-    #Game loop
-
-        #Recovery of keyboard inputs
-
-        #Update the position
-
-        #Victory test
-    
+game_loop = 1
 
 
     
-    pass
 
-main()
+
+
+#Initialization of the lvl 
+lvl = Map('lvl_design.txt')
+lvl.create()
+
+#Initialization of the character
+McGyver = Character(lvl)
+#Initialization of the objects with the method create_objects from the Object class
+    
+#Game loop
+while game_loop:
+
+    direction = input("Entrez votre direction (Z, Q, S, D): ")
+
+    if direction == 'z':
+        McGyver.move('up')
+    elif direction == 'q':
+        McGyver.move('left')
+    elif direction == 's':
+        McGyver.move('down')
+    elif direction == 'd':
+        McGyver.move('right')
+
+
+    #Update the position
+    McGyver.display_position()
+    
+    #Victory test
+    if lvl.structure[McGyver.y][McGyver.x] == 'a':
+        game_loop = 0
+
+print("Victory")
+    
+
+
+
  

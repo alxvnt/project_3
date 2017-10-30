@@ -1,4 +1,4 @@
-
+from constants import *
 
 #class that generate the level
 class Map:
@@ -28,14 +28,50 @@ class Map:
 #class that generate the character
 class Character:
 
-    def __init__(self):
+    def __init__(self, lvl):
 
         #Initialization of the position
         self.x = 0
         self.y = 0
 
-    def move(self):
-        pass
+        #LVL where the character is
+        self.lvl = lvl
+
+
+    def move(self, direction):
+
+        if direction == 'right':
+            # Test if the character will not go out of the screen
+            if self.x < (side_sprite - 1):
+                #Test if the destination is not a wall
+                if self.lvl.structure[self.y][self.x + 1] != 'm':
+                    #Incrementing self.x by 1
+                    self.x += 1
+
+        if direction == 'left':
+            # Test if the character will not go out of the screen
+            if self.x > 0:
+                #Test if the destination is not a wall
+                if self.lvl.structure[self.y][self.x - 1] != 'm':
+                    #Decrementing self.x by 1
+                    self.x -= 1
+
+
+        if direction == 'up':
+            # Test if the character will not go out of the screen
+            if self.y > 0:
+                #Test if the destination is not a wall
+                if self.lvl.structure[self.y - 1][self.x] != 'm':
+                    #Incrementing self.y by 1
+                    self.y -= 1
+
+        if direction == 'down':
+            if self.y < (side_sprite - 1):
+                #Test if the destination is not a wall
+                if self.lvl.structure[self.y + 1][self.x] != 'm':
+                    #Decrementing self.y by 1
+                    self.y += 1
+
 
     def display_position(self):
         print("x = ", self.x, "| y =", self.y)
