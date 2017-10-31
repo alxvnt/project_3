@@ -24,7 +24,7 @@ for i in list_obj:
 #Game loop
 while game_loop:
 
-    direction = input("Choose your direction (Z, Q, S, D): ")
+    direction = input("Choose your direction (z, q, s, d): ")
 
     if direction == 'z':
         mcGyver.move('up')
@@ -45,11 +45,11 @@ while game_loop:
     mcGyver.display_position()
     print("You have ", mcGyver.nb_object," objects")
     
-    #End of the game test
+    #test if the game is over
     if (lvl.structure[mcGyver.y][mcGyver.x] == 'a'):
         game_loop = 0
 
-if mcGyver.nb_object >= 3:
+if mcGyver.nb_object == 3:
     print("Victory")
 else:
     print("Defeat: You miss some Object")
