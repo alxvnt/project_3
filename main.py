@@ -1,59 +1,90 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
+import pygame
+from pygame.locals import *
+
 from classes import *
 from constants import *
 
-game_loop = 1
+pygame.init()
 
-#Initialization of the lvl 
-lvl = Map()
-lvl.create()
+# Ouverture de la fenêtre Pygame
+window = pygame.display.set_mode((window_size, window_size))
 
-#Initialization of the character
-mcGyver = Character(lvl)
-#Initialization of the objects 
-ether = Object(lvl)
-needle = Object(lvl)
-plastic_tube = Object(lvl)
-
-list_obj = [ether, needle, plastic_tube]
-for i in list_obj:
-    i.obj_position()
-  
-#Game loop
-while game_loop:
-
-    direction = input("Choose your direction (z, q, s, d): ")
-
-    if direction == 'z':
-        mcGyver.move('up')
-    elif direction == 'q':
-        mcGyver.move('left')
-    elif direction == 's':
-        mcGyver.move('down')
-    elif direction == 'd':
-        mcGyver.move('right')
-
-    #test if you collect an object
-    for a in list_obj:
-        mcGyver.take_obj(a)
+# Chargement et collage du fond
+fond = pygame.image.load("pic/background.jpg").convert()
 
 
-
-    #Update the position
-    mcGyver.display_position()
-    print("You have ", mcGyver.nb_object," objects")
-    
-    #test if the game is over
-    if (lvl.structure[mcGyver.y][mcGyver.x] == 'a'):
-        game_loop = 0
-
-if mcGyver.nb_object == 3:
-    print("Victory")
-else:
-    print("Defeat: You miss some Object")
+pygame.display.set_caption("Maze of Mac Gyver")
 
 
+# BOUCLE PROG
+prog = 1
 
- 
+# BOUCLE Jeu
+continuer = 1
+
+
+while prog:
+
+
+        lvl = Map()
+        lvl.create()
+        lvl.display(window)
+        mcGyver  = Character(mcGyver_right, mcGyver_left,mcGyver_up,mcGyver_down,lvl)
+
+        nb_object = 0
+
+        ether = Object(lvl, pic_ether)
+        needle = Object(lvl, pic_needle)
+        tube = Object(lvl, pic_tube)
+        obj_list = [ether, needle, tube]
+
+        
+        while continuer:
+                
+                pygame.time.Clock().tick(30)
+
+                for event in pygame.event.get():
+
+                        if event.type == KEYDOWN:
+                                if event.key == K_RIGHT:
+                                        mcGyver.move('right')
+                                elif event.key == K_LEFT:
+                                        mcGyver.move('left')
+                                elif event.key == K_UP:
+                                        mcGyver.move('up')
+                                elif event.key == K_DOWN:
+                                        mcGyver.move('down')
+                        
+
+                window.blit(fond, (0,0))
+                lvl.display(window)
+                for obj in obj_list:
+                        window.blit(obj.design, (obj.obj_sprite_x, obj.obj_sprite_y))
+                        if obj.taken == False:
+                                mcGyver.take_obj(obj)
+                                #print(obj.taken)
+                                
+                print("You have ", mcGyver.nb_object," objects")
+                window.blit(mcGyver.direction, (mcGyver.sprite_x, mcGyver.sprite_y))
+                pygame.display.flip()
+
+                if (lvl.structure[mcGyver.y][mcGyver.x] == 'a'):
+                        continuer = 0
+
+                        if mcGyver.nb_object == 3:
+                                fond2 = pygame.image.load(victory).convert()
+                        else:
+                                fond2 = pygame.image.load(defeat).convert()
+            
+        window.blit(fond2, (0,0))
+        pygame.display.flip()
+        for event in pygame.event.get():
+                if event.type == QUIT:
+                        prog =0
+                elif event.type == KEYDOWN:
+                      if event.key == K_r:
+                              continuer = 1
+        

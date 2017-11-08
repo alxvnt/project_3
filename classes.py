@@ -1,16 +1,18 @@
+import pygame
+from pygame.locals import *
 from constants import *
 import random
 
 
-#Class that generate the level
+# Class that generate the level
 class Map:
 
     def __init__(self):
         
-        self.file = 'lvl_design.txt'
+        self.file = lvl_design
         self.structure = 0
 
-    #Generate a lvl from the file
+    # Generate a lvl from the file
     def create(self):
 
         with open(self.file,'r') as file:
@@ -26,81 +28,129 @@ class Map:
                 structure_file.append(lign_lvl)
 
             self.structure = structure_file
-            
 
-#Class that generate the character
+
+    def display(self, window):
+
+        wall = pygame.image.load(pic_wall).convert()
+        start = pygame.image.load(pic_start).convert()
+        end = pygame.image.load(pic_end).convert()
+
+        lign_number = 0
+        for lign in self.structure:
+
+            case_number = 0
+            for sprite in lign:
+                x = case_number * size_sprite
+                y = lign_number * size_sprite
+                if sprite == 'm':
+                    window.blit(wall, (x,y))
+                elif sprite == 'd':
+                    window.blit(start, (x,y))
+                elif sprite == 'a':
+                    window.blit(end, (x,y))
+                case_number +=1
+            lign_number +=1
+        
+
+# Class that generate the character
 class Character:
 
-    def __init__(self, lvl):
+    def __init__(self, right, left, up, down, lvl):
 
-        #Initialization of the position
+        # Character's sprite
+        self.right = pygame.image.load(right).convert_alpha()
+        self.left = pygame.image.load(left).convert_alpha()
+        self.up = pygame.image.load(up).convert_alpha()
+        self.down = pygame.image.load(down).convert_alpha()
+
+        # Initialization of the direction
+        self.direction = self.right
+
+        # Initialization of the position on the grid
         self.x = 0
         self.y = 0
 
-        #LVL where the character is
+        # Initialization of the position on the design
+        self.sprite_x = 0
+        self.sprite_y = 0
+
+        # LVL where the character is
         self.lvl = lvl
 
-        #Number of object taken
+        # Number of object taken
         self.nb_object = 0
 
-    #Character's deplacement
+    # Character's deplacement
     def move(self, direction):
 
         if direction == 'right':
             # Test if the character will not go out of the screen
-            if self.x < (side_sprite - 1):
-                #Test if the destination is not a wall
+            if self.x < (nb_sprite - 1):
+                # Test if the destination is not a wall
                 if self.lvl.structure[self.y][self.x + 1] != 'm':
-                    #Incrementing self.x by 1
+                    # Incrementing self.x by 1
                     self.x += 1
+                    # Update the position on the interface
+                    self.sprite_x = self.x * size_sprite
+            # Update the direction on the interface
+            self.direction = self.right
+
 
         if direction == 'left':
             if self.x > 0:
                 if self.lvl.structure[self.y][self.x - 1] != 'm':
                     self.x -= 1
-
+                    self.sprite_x = self.x * size_sprite
+            self.direction = self.left
 
         if direction == 'up':
             if self.y > 0:
                 if self.lvl.structure[self.y - 1][self.x] != 'm':
                     self.y -= 1
+                    self.sprite_y = self.y * size_sprite
+            self.direction = self.up
 
         if direction == 'down':
-            if self.y < (side_sprite - 1):
-                #Test if the destination is not a wall
+            if self.y < (nb_sprite - 1):
                 if self.lvl.structure[self.y + 1][self.x] != 'm':
-                    #Decrementing self.y by 1
                     self.y += 1
+                    self.sprite_y = self.y * size_sprite
+            self.direction = self.down
 
-
-    #Print the position
-    def display_position(self):
-        
-        print("x = ", self.x, "| y =", self.y)
-    
-    #Get the object
+    # Get the object
     def take_obj(self, obj):
         
-        if (self.x == obj.obj_x) and (self.y == obj.obj_y):
+        if (self.x == obj.obj_x) and (self.y == obj.obj_y) and (obj.taken == False):
             self.nb_object +=1
-            obj.obj_x = 100
-            obj.obj_y = 100
+            obj.taken = True
+            obj.design = pygame.image.load(object_taken).convert_alpha()
+            
             
 
-#Class that generate objects
+# Class that generate objects
 class Object:
 
-    #Create an object and place him in random position
-    def __init__(self, lvl):
+    # Create an object and place him in random position
+    def __init__(self, lvl, design): 
 
+        # Object's position on the grid
         self.obj_x = 0
         self.obj_y = 0
+
+        # Object's position on the design
+        self.obj_sprite_x = 0
+        self.obj_sprite_y = 0
+        
+        # Booléan if the object has been picked up
+        self.taken = False
         self.lvl = lvl
+        self.design = pygame.image.load(design).convert_alpha()
         while self.lvl.structure[self.obj_y][self.obj_x] != 'o':
+            #Update the position on the grid
             self.obj_x = random.randint(0, 14)
             self.obj_y = random.randint(0, 14)
+            #Update the position on the design
+            self.obj_sprite_x = self.obj_x * size_sprite
+            self.obj_sprite_y = self.obj_y * size_sprite
 
-
-    #Get the object position
-    def obj_position(self):
-        print("coordonnées de l'objet : x = ", self.obj_x, "| y =", self.obj_y)
