@@ -1,3 +1,6 @@
+#! /usr/bin/env python3
+# coding: utf-8
+
 import pygame
 from pygame.locals import *
 from constants import *
@@ -8,19 +11,24 @@ import random
 class Map:
 
     def __init__(self):
-        
+
+        # The map's file
         self.file = lvl_design
+        # The map in the form of list
         self.structure = 0
 
     # Generate a lvl from the file
     def create(self):
 
-        with open(self.file,'r') as file:
+        # Open the lvl file
+        with open(self.file, 'r') as file:
+            # Create a list of list
             structure_file = []
 
             for lign in file:
                 lign_lvl = []
 
+                # Each caracter will be a case of the grid
                 for caracter in lign:
                     if caracter != "\n":
                         lign_lvl.append(caracter)
@@ -29,9 +37,10 @@ class Map:
 
             self.structure = structure_file
 
-
+    # Generate the lvl design
     def display(self, window):
 
+        # Different sprite of the lvl design
         wall = pygame.image.load(pic_wall).convert()
         start = pygame.image.load(pic_start).convert()
         end = pygame.image.load(pic_end).convert()
@@ -41,17 +50,18 @@ class Map:
 
             case_number = 0
             for sprite in lign:
+                # Add the corresponding sprite at the good place
                 x = case_number * size_sprite
                 y = lign_number * size_sprite
                 if sprite == 'm':
-                    window.blit(wall, (x,y))
+                    window.blit(wall, (x, y))
                 elif sprite == 'd':
-                    window.blit(start, (x,y))
+                    window.blit(start, (x, y))
                 elif sprite == 'a':
-                    window.blit(end, (x,y))
-                case_number +=1
-            lign_number +=1
-        
+                    window.blit(end, (x, y))
+                case_number += 1
+            lign_number += 1
+
 
 # Class that generate the character
 class Character:
@@ -96,7 +106,6 @@ class Character:
             # Update the direction on the interface
             self.direction = self.right
 
-
         if direction == 'left':
             if self.x > 0:
                 if self.lvl.structure[self.y][self.x - 1] != 'm':
@@ -120,19 +129,19 @@ class Character:
 
     # Get the object
     def take_obj(self, obj):
-        
-        if (self.x == obj.obj_x) and (self.y == obj.obj_y) and (obj.taken == False):
-            self.nb_object +=1
+
+        if (self.x == obj.obj_x) and (self.y ==
+                                      obj.obj_y) and (obj.taken is False):
+            self.nb_object += 1
             obj.taken = True
             obj.design = pygame.image.load(object_taken).convert_alpha()
-            
-            
+
 
 # Class that generate objects
 class Object:
 
     # Create an object and place him in random position
-    def __init__(self, lvl, design): 
+    def __init__(self, lvl, design):
 
         # Object's position on the grid
         self.obj_x = 0
@@ -141,16 +150,17 @@ class Object:
         # Object's position on the design
         self.obj_sprite_x = 0
         self.obj_sprite_y = 0
-        
+
         # Booléan if the object has been picked up
         self.taken = False
         self.lvl = lvl
         self.design = pygame.image.load(design).convert_alpha()
+
+        # Place the object on a sprite o
         while self.lvl.structure[self.obj_y][self.obj_x] != 'o':
-            #Update the position on the grid
+            # Update the position on the grid
             self.obj_x = random.randint(0, 14)
             self.obj_y = random.randint(0, 14)
-            #Update the position on the design
+            # Update the position on the design
             self.obj_sprite_x = self.obj_x * size_sprite
             self.obj_sprite_y = self.obj_y * size_sprite
-

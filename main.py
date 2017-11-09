@@ -3,49 +3,58 @@
 
 import pygame
 from pygame.locals import *
-
 from classes import *
 from constants import *
 
 pygame.init()
 
-# Ouverture de la fenêtre Pygame
+# Open the Pygame window
 window = pygame.display.set_mode((window_size, window_size))
 
 # Chargement et collage du fond
-fond = pygame.image.load("pic/background.jpg").convert()
 
 
+# Title of the window
 pygame.display.set_caption("Maze of Mac Gyver")
 
 
-# BOUCLE PROG
+# Initialization of the program loop
 prog = 1
 
-# BOUCLE Jeu
+# Initilization of the game loop
 continuer = 1
 
-
+# Program loop
 while prog:
 
-
+        # Initialization of the lvl
         lvl = Map()
         lvl.create()
+        # Initilization of the lvl design
         lvl.display(window)
-        mcGyver  = Character(mcGyver_right, mcGyver_left,mcGyver_up,mcGyver_down,lvl)
+        background = pygame.image.load(pic_background).convert()
 
-        nb_object = 0
+        # Initialization of the character
+        mcGyver = Character(mcGyver_right, mcGyver_left,
+                            mcGyver_up, mcGyver_down, lvl)
 
+        # Initialization of objects
         ether = Object(lvl, pic_ether)
         needle = Object(lvl, pic_needle)
         tube = Object(lvl, pic_tube)
+## Boucle
+##
+##
+##        
         obj_list = [ether, needle, tube]
 
-        
+        # Game loop
         while continuer:
-                
+
+                # Limitation of the number of loop per second
                 pygame.time.Clock().tick(30)
 
+                # Detection of events
                 for event in pygame.event.get():
 
                         if event.type == KEYDOWN:
@@ -57,34 +66,44 @@ while prog:
                                         mcGyver.move('up')
                                 elif event.key == K_DOWN:
                                         mcGyver.move('down')
-                        
 
-                window.blit(fond, (0,0))
+                # Display the lvl and objects
+                window.blit(background, (0, 0))
                 lvl.display(window)
                 for obj in obj_list:
-                        window.blit(obj.design, (obj.obj_sprite_x, obj.obj_sprite_y))
-                        if obj.taken == False:
+                        window.blit(obj.design, (obj.obj_sprite_x,
+                                                 obj.obj_sprite_y))
+                        # Test if an object have been taken
+                        if obj.taken is False:
                                 mcGyver.take_obj(obj)
-                                #print(obj.taken)
-                                
-                print("You have ", mcGyver.nb_object," objects")
-                window.blit(mcGyver.direction, (mcGyver.sprite_x, mcGyver.sprite_y))
+
+                # Update the character direction
+                window.blit(mcGyver.direction, (mcGyver.sprite_x,
+                                                mcGyver.sprite_y))
+                # Update the window
                 pygame.display.flip()
 
+                # Test if the game is finish
                 if (lvl.structure[mcGyver.y][mcGyver.x] == 'a'):
                         continuer = 0
 
+                # Test of victory
                         if mcGyver.nb_object == 3:
-                                fond2 = pygame.image.load(victory).convert()
+                            final_background = \
+                                pygame.image.load(victory).convert()
                         else:
-                                fond2 = pygame.image.load(defeat).convert()
-            
-        window.blit(fond2, (0,0))
+                            final_background = \
+                                pygame.image.load(defeat).convert()
+
+        window.blit(final_background, (0, 0))
         pygame.display.flip()
+
+        # New game or quit the program
         for event in pygame.event.get():
                 if event.type == QUIT:
-                        prog =0
+                        prog = 0
                 elif event.type == KEYDOWN:
-                      if event.key == K_r:
-                              continuer = 1
-        
+                    if event.key == K_r:
+                        continuer = 1
+                    elif event.key == K_ESCAPE:
+                        prog = 0
