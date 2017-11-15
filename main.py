@@ -22,7 +22,7 @@ pygame.display.set_caption("Maze of Mac Gyver")
 prog = 1
 
 # Initilization of the game loop
-continuer = 1
+game = 1
 
 # Program loop
 while prog:
@@ -49,7 +49,7 @@ while prog:
         obj_list = [ether, needle, tube]
 
         # Game loop
-        while continuer:
+        while game:
 
                 # Limitation of the number of loop per second
                 pygame.time.Clock().tick(30)
@@ -85,16 +85,18 @@ while prog:
 
                 # Test if the game is finish
                 if (lvl.structure[mcGyver.y][mcGyver.x] == 'a'):
-                        continuer = 0
+                        game = 0
 
                 # Test of victory
                         if mcGyver.nb_object == 3:
-                            final_background = \
-                                pygame.image.load(victory).convert()
+                                final_background = \
+                                        pygame.image.load(victory).convert()
+                                
                         else:
-                            final_background = \
-                                pygame.image.load(defeat).convert()
+                                final_background = \
+                                        pygame.image.load(defeat).convert()
 
+                        
         window.blit(final_background, (0, 0))
         pygame.display.flip()
 
@@ -104,6 +106,6 @@ while prog:
                         prog = 0
                 elif event.type == KEYDOWN:
                     if event.key == K_r:
-                        continuer = 1
+                        game = 1
                     elif event.key == K_ESCAPE:
                         prog = 0

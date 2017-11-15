@@ -159,8 +159,8 @@ class Object:
         # Place the object on a sprite o
         while self.lvl.structure[self.obj_y][self.obj_x] != 'o':
             # Update the position on the grid
-            self.obj_x = random.randint(0, 14)
-            self.obj_y = random.randint(0, 14)
+            self.obj_x = random.randint(0, nb_sprite - 1)
+            self.obj_y = random.randint(0, nb_sprite - 1)
             # Update the position on the design
             self.obj_sprite_x = self.obj_x * size_sprite
             self.obj_sprite_y = self.obj_y * size_sprite
