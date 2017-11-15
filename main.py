@@ -74,8 +74,8 @@ while prog:
                         window.blit(obj.design, (obj.obj_sprite_x,
                                                  obj.obj_sprite_y))
                         # Test if an object have been taken
-                        if obj.taken is False:
-                                mcGyver.take_obj(obj)
+                        #if obj.taken is False:
+                        mcGyver.take_obj(obj)
 
                 # Update the character direction
                 window.blit(mcGyver.direction, (mcGyver.sprite_x,
